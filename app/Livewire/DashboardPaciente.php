@@ -42,6 +42,42 @@ class DashboardPaciente extends Component
         $this->listasCotejo = $this->admision->listasCotejo()->orderBy('fecha_verificacion', 'desc')->get();
     }
 
+    public function marcarLlamadaAtencion($cotejoId)
+    {
+        $cotejo = \App\Models\ListaCotejo::findOrFail($cotejoId);
+        
+        // Verificar que pertenece a esta admisión
+        if ($cotejo->admision_id !== $this->admision->id) {
+            session()->flash('error', 'No tiene permisos para realizar esta acción.');
+            return;
+        }
+
+        $cotejo->update(['llamada_atencion' => true]);
+        
+        session()->flash('success', 'Llamada de atención marcada correctamente.');
+        
+        // Recargar datos
+        $this->mount($this->admision->id);
+    }
+
+    public function quitarLlamadaAtencion($cotejoId)
+    {
+        $cotejo = \App\Models\ListaCotejo::findOrFail($cotejoId);
+        
+        // Verificar que pertenece a esta admisión
+        if ($cotejo->admision_id !== $this->admision->id) {
+            session()->flash('error', 'No tiene permisos para realizar esta acción.');
+            return;
+        }
+
+        $cotejo->update(['llamada_atencion' => false]);
+        
+        session()->flash('success', 'Llamada de atención removida correctamente.');
+        
+        // Recargar datos
+        $this->mount($this->admision->id);
+    }
+
     public function render()
     {
         return view('livewire.dashboard-paciente');

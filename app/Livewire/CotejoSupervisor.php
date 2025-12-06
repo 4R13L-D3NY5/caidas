@@ -17,6 +17,7 @@ class CotejoSupervisor extends Component
     public $accionesAplicadas = [];
     public $observaciones = [];
     public $fecha_verificacion;
+    public $llamada_atencion = false;
 
     protected $servicioAcciones;
 
@@ -63,6 +64,7 @@ class CotejoSupervisor extends Component
             'user_id' => auth()->id(),
             'fecha_verificacion' => $this->fecha_verificacion,
             'porcentaje_cumplimiento' => $porcentaje,
+            'llamada_atencion' => $this->llamada_atencion,
         ]);
 
         // Guardar items

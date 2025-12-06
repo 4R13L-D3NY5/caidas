@@ -12,7 +12,8 @@ return new class extends Migration
             // Campos para úlceras por presión
             $table->boolean('hubo_ulcera')->default(false)->after('hubo_caida');
             $table->string('estado_ulcera')->nullable()->after('hubo_ulcera');
-            $table->text('descripcion_ulcera')->nullable()->after('estado_ulcera');
+            $table->string('presencia_necrosis')->nullable()->after('estado_ulcera');
+            $table->text('descripcion_ulcera')->nullable()->after('presencia_necrosis');
             $table->string('ubicacion_ulcera')->nullable()->after('descripcion_ulcera');
             $table->text('observaciones_ulcera')->nullable()->after('ubicacion_ulcera');
         });
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->dropColumn([
                 'hubo_ulcera',
                 'estado_ulcera',
+                'presencia_necrosis',
                 'descripcion_ulcera',
                 'ubicacion_ulcera',
                 'observaciones_ulcera'

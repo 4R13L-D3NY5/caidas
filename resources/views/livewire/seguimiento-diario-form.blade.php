@@ -48,13 +48,20 @@
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Registro de Caídas</h3>
                     
                     <div class="mb-4">
-                        <label class="flex items-center">
-                            <input type="checkbox" wire:model="hubo_caida" class="mr-2">
-                            <span class="text-sm font-medium text-gray-700">¿Hubo alguna caída durante el turno?</span>
-                        </label>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">¿Hubo alguna caída durante el turno? *</label>
+                        <div class="flex gap-6">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" wire:model="hubo_caida" value="1" class="mr-2">
+                                <span class="text-sm text-gray-700">Sí</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" wire:model="hubo_caida" value="0" class="mr-2">
+                                <span class="text-sm text-gray-700">No</span>
+                            </label>
+                        </div>
                     </div>
 
-                    @if($hubo_caida)
+                    @if($hubo_caida === '1' || $hubo_caida === 1 || $hubo_caida === true)
                         <div class="space-y-4 pl-6 border-l-4 border-red-500">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -89,13 +96,20 @@
                             </div>
 
                             <div>
-                                <label class="flex items-center">
-                                    <input type="checkbox" wire:model="hubo_lesion" class="mr-2">
-                                    <span class="text-sm font-medium text-gray-700">¿Hubo lesión?</span>
-                                </label>
+                                <label class="block text-sm font-medium text-gray-700 mb-3">¿Hubo lesión? *</label>
+                                <div class="flex gap-6">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" wire:model="hubo_lesion" value="1" class="mr-2">
+                                        <span class="text-sm text-gray-700">Sí</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" wire:model="hubo_lesion" value="0" class="mr-2">
+                                        <span class="text-sm text-gray-700">No</span>
+                                    </label>
+                                </div>
                             </div>
 
-                            @if($hubo_lesion)
+                            @if($hubo_lesion === '1' || $hubo_lesion === 1 || $hubo_lesion === true)
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Descripción de la Lesión *</label>
                                     <textarea wire:model="descripcion_lesion" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md" required></textarea>
@@ -108,7 +122,7 @@
                                 <textarea wire:model="observacion" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md"></textarea>
                             </div>
                         </div>
-                    @else
+                    @elseif($hubo_caida === '0' || $hubo_caida === 0 || $hubo_caida === false)
                         <div class="p-4 bg-green-50 border border-green-200 rounded-md">
                             <p class="text-sm text-green-700">✓ Sin eventos de caídas durante las 24 horas</p>
                         </div>
@@ -121,28 +135,54 @@
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Registro de Úlceras por Presión</h3>
                     
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">¿Hubo algún caso de úlceras durante el turno? *</label>
-                        <select wire:model="hubo_ulcera" class="w-full px-4 py-2 border border-gray-300 rounded-md" required>
-                            <option value="">Seleccione una opción</option>
-                            <option value="1">Sí</option>
-                            <option value="0">No</option>
-                        </select>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">¿Hubo algún caso de úlceras durante el turno? *</label>
+                        <div class="flex gap-6">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" wire:model="hubo_ulcera" value="1" class="mr-2">
+                                <span class="text-sm text-gray-700">Sí</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" wire:model="hubo_ulcera" value="0" class="mr-2">
+                                <span class="text-sm text-gray-700">No</span>
+                            </label>
+                        </div>
                     </div>
 
-                    @if($hubo_ulcera)
+                    @if($hubo_ulcera === '1' || $hubo_ulcera === 1 || $hubo_ulcera === true)
                         <div class="space-y-4 pl-6 border-l-4 border-orange-500">
+                            <!-- Pregunta 1: Estadio -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Clasificación de Estado *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Estadio - Descripción Clínica (terminología enfermería) *</label>
                                 <select wire:model="estado_ulcera" class="w-full px-4 py-2 border border-gray-300 rounded-md" required>
-                                    <option value="">Seleccione un estado</option>
+                                    <option value="">Seleccione un estadio</option>
                                     <option value="Estado I">Estado I - Eritema en piel íntegra</option>
                                     <option value="Estado II">Estado II - Pérdida parcial del espesor cutáneo (epidermis/dermis). Se presenta como abrasión, flictena o úlcera superficial</option>
                                     <option value="Estado III">Estado III - Pérdida total del espesor cutáneo con afectación de tejido subcutáneo. Puede haber cavidad, socavamiento y tejido de granulación</option>
-                                    <option value="Estado IV">Estado IV - Pérdida total del espesor con exposición de músculo, hueso o estructuras de soporte. Frecuenta presencia de necrosis</option>
-                                    <option value="No clasificable">No clasificable - Profundidad no determinable por presencia de esfacelos o escara que cubren la base de la lesión</option>
-                                    <option value="Lesión de tejido profundo">Lesión de tejido profundo - Piel íntegra o con flictena hemática, color morado/borgoña</option>
+                                    <option value="Estado IV">Estado IV - Pérdida total del espesor con exposición de músculo, hubo o estructuras de soporte</option>
                                 </select>
                                 @error('estado_ulcera') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- Pregunta 2: Frecuente presencia de necrosis -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-3">Frecuente presencia de necrosis *</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-start cursor-pointer p-3 border border-gray-300 rounded-md hover:bg-gray-50">
+                                        <input type="radio" wire:model="presencia_necrosis" value="No clasificable" class="mt-1 mr-3">
+                                        <div>
+                                            <div class="font-medium text-sm text-gray-900">No clasificable</div>
+                                            <div class="text-xs text-gray-600">Profundidad no determinable por presencia de esfacelos o escara que cubren la base de la lesión</div>
+                                        </div>
+                                    </label>
+                                    <label class="flex items-start cursor-pointer p-3 border border-gray-300 rounded-md hover:bg-gray-50">
+                                        <input type="radio" wire:model="presencia_necrosis" value="Lesión de tejido profundo" class="mt-1 mr-3">
+                                        <div>
+                                            <div class="font-medium text-sm text-gray-900">Lesión de tejido profundo</div>
+                                            <div class="text-xs text-gray-600">Piel íntegra o con flictena hemática, color morado/borgoña</div>
+                                        </div>
+                                    </label>
+                                </div>
+                                @error('presencia_necrosis') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <div>
@@ -165,7 +205,7 @@
                                     placeholder="Acciones tomadas, tratamiento aplicado, etc."></textarea>
                             </div>
                         </div>
-                    @elseif($hubo_ulcera === '0' || $hubo_ulcera === false)
+                    @elseif($hubo_ulcera === '0' || $hubo_ulcera === 0 || $hubo_ulcera === false)
                         <div class="p-4 bg-green-50 border border-green-200 rounded-md">
                             <p class="text-sm text-green-700">✓ Sin eventos de úlceras durante las 24 horas</p>
                         </div>

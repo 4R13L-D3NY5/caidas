@@ -19,11 +19,14 @@ class ListaCotejo extends Model
         'user_id',
         'fecha_verificacion',
         'porcentaje_cumplimiento',
+        'llamada_atencion',
+        'observaciones',
     ];
 
     protected $casts = [
         'fecha_verificacion' => 'date',
         'porcentaje_cumplimiento' => 'decimal:2',
+        'llamada_atencion' => 'boolean',
     ];
 
     public function admision(): BelongsTo

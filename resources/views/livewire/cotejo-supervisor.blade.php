@@ -62,7 +62,37 @@
                 <p class="text-sm text-gray-700">
                     <span class="font-semibold">Acciones marcadas:</span> {{ count(array_filter($accionesAplicadas)) }}
                 </p>
+                @php
+                    $totalAcciones = $accionesRecomendadas->count();
+                    $accionesAplicadasCount = count(array_filter($accionesAplicadas));
+                    $porcentaje = $totalAcciones > 0 ? round(($accionesAplicadasCount / $totalAcciones) * 100, 2) : 0;
+                @endphp
+                <p class="text-sm text-gray-700 mt-2">
+                    <span class="font-semibold">Cumplimiento estimado:</span> 
+                    <span class="text-lg font-bold {{ $porcentaje >= 80 ? 'text-green-600' : ($porcentaje >= 60 ? 'text-yellow-600' : 'text-red-600') }}">
+                        {{ $porcentaje }}%
+                    </span>
+                </p>
             </div>
+
+            <!-- Llamada de Atención (solo si cumplimiento < 100%) -->
+            @if($porcentaje < 100 && $porcentaje > 0)
+                <div class="bg-yellow-50 border border-yellow-300 rounded-lg p-4 mb-6">
+                    <div class="flex items-start gap-3">
+                        <input type="checkbox" 
+                            wire:model="llamada_atencion" 
+                            id="llamada_atencion"
+                            class="mt-1">
+                        <label for="llamada_atencion" class="flex-1 cursor-pointer">
+                            <span class="font-semibold text-gray-800">Notificar llamada de atención</span>
+                            <p class="text-sm text-gray-600 mt-1">
+                                Marque esta opción si las acciones fueron verificadas pero el cumplimiento no alcanzó el 100%. 
+                                Esto generará una notificación para el personal responsable.
+                            </p>
+                        </label>
+                    </div>
+                </div>
+            @endif
 
             <!-- Botones -->
             <div class="flex justify-end gap-3">

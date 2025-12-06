@@ -28,6 +28,7 @@ class SeguimientoDiario extends Model
         // Campos para úlceras
         'hubo_ulcera',
         'estado_ulcera',
+        'presencia_necrosis',
         'descripcion_ulcera',
         'ubicacion_ulcera',
         'observaciones_ulcera',
