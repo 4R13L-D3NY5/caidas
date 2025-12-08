@@ -168,68 +168,93 @@
         
         @if($seguimientos->count() > 0)
             @php
-                $totalCaidas = $seguimientos->where('hubo_caida', true)->count();
+                $totalEventos = $admision->tipo === 'caida'
+                    ? $seguimientos->where('hubo_caida', true)->count()
+                    : $seguimientos->where('hubo_ulcera', true)->count();
+                
+                $tituloEvento = $admision->tipo === 'caida' ? 'Caídas' : 'Úlceras';
+                $textoRegistrado = $admision->tipo === 'caida' ? 'CAÍDA REGISTRADA' : 'ÚLCERA REGISTRADA';
+                $textoSinEvento = $admision->tipo === 'caida' ? 'SIN CAÍDAS' : 'SIN ÚLCERAS';
             @endphp
             
             <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded">
-                <p class="font-semibold">Total de Caídas Registradas: 
-                    <span class="text-lg {{ $totalCaidas > 0 ? 'text-red-600' : 'text-green-600' }}">{{ $totalCaidas }}</span>
+                <p class="font-semibold">Total de {{ $tituloEvento }} Registradas: 
+                    <span class="text-lg {{ $totalEventos > 0 ? 'text-red-600' : 'text-green-600' }}">{{ $totalEventos }}</span>
                 </p>
             </div>
 
             <div class="space-y-4">
                 @foreach($seguimientos as $seguimiento)
-                    <div class="border border-gray-300 rounded-lg p-4 {{ $seguimiento->hubo_caida ? 'bg-red-50 border-red-300' : 'bg-green-50 border-green-300' }}">
+                    @php
+                        $huboEvento = $admision->tipo === 'caida' ? $seguimiento->hubo_caida : $seguimiento->hubo_ulcera;
+                    @endphp
+                    <div class="border border-gray-300 rounded-lg p-4 {{ $huboEvento ? 'bg-red-50 border-red-300' : 'bg-green-50 border-green-300' }}">
                         <div class="flex justify-between items-start mb-3">
                             <div>
                                 <h3 class="font-bold text-lg">{{ $seguimiento->fecha->format('d/m/Y') }} - {{ $seguimiento->turno }}</h3>
                             </div>
                             <div>
-                                @if($seguimiento->hubo_caida)
-                                    <span class="px-3 py-1 bg-red-600 text-white rounded-full text-sm font-bold">CAÍDA REGISTRADA</span>
-                                @else
-                                    <span class="px-3 py-1 bg-green-600 text-white rounded-full text-sm font-bold">SIN CAÍDAS</span>
-                                @endif
+                                <span class="px-3 py-1 {{ $huboEvento ? 'bg-red-600' : 'bg-green-600' }} text-white rounded-full text-sm font-bold">
+                                    {{ $huboEvento ? $textoRegistrado : $textoSinEvento }}
+                                </span>
                             </div>
                         </div>
 
-                        @if($seguimiento->hubo_caida)
+                        @if($huboEvento)
                             <div class="grid grid-cols-2 gap-3 text-sm">
-                                <div>
-                                    <span class="font-semibold">Hora:</span> {{ $seguimiento->hora_caida }}
-                                </div>
-                                <div>
-                                    <span class="font-semibold">Lugar:</span> {{ $seguimiento->lugar }}
-                                </div>
-                                <div>
-                                    <span class="font-semibold">Tipo de Caída:</span> {{ $seguimiento->tipo_caida }}
-                                </div>
-                                <div>
-                                    <span class="font-semibold">Hubo Lesión:</span> {{ $seguimiento->hubo_lesion ? 'Sí' : 'No' }}
-                                </div>
-                                @if($seguimiento->hubo_lesion && $seguimiento->descripcion_lesion)
-                                    <div class="col-span-2">
-                                        <span class="font-semibold">Descripción de Lesión:</span> {{ $seguimiento->descripcion_lesion }}
+                                @if($admision->tipo === 'caida')
+                                    <div>
+                                        <span class="font-semibold">Hora:</span> {{ $seguimiento->hora_caida }}
                                     </div>
-                                @endif
-                                @if($seguimiento->acciones_tomadas && count($seguimiento->acciones_tomadas) > 0)
-                                    <div class="col-span-2">
-                                        <span class="font-semibold">Acciones Tomadas:</span>
-                                        <ul class="list-disc list-inside ml-4 mt-1">
-                                            @foreach($seguimiento->acciones_tomadas as $accion)
-                                                <li>{{ $accion }}</li>
-                                            @endforeach
-                                        </ul>
+                                    <div>
+                                        <span class="font-semibold">Lugar:</span> {{ $seguimiento->lugar }}
                                     </div>
-                                @endif
-                                @if($seguimiento->observacion)
-                                    <div class="col-span-2">
-                                        <span class="font-semibold">Observación:</span> {{ $seguimiento->observacion }}
+                                    <div>
+                                        <span class="font-semibold">Tipo de Caída:</span> {{ $seguimiento->tipo_caida }}
                                     </div>
+                                    <div>
+                                        <span class="font-semibold">Hubo Lesión:</span> {{ $seguimiento->hubo_lesion ? 'Sí' : 'No' }}
+                                    </div>
+                                    @if($seguimiento->hubo_lesion && $seguimiento->descripcion_lesion)
+                                        <div class="col-span-2">
+                                            <span class="font-semibold">Descripción de Lesión:</span> {{ $seguimiento->descripcion_lesion }}
+                                        </div>
+                                    @endif
+                                    @if($seguimiento->acciones_tomadas && count($seguimiento->acciones_tomadas) > 0)
+                                        <div class="col-span-2">
+                                            <span class="font-semibold">Acciones Tomadas:</span>
+                                            <ul class="list-disc list-inside ml-4 mt-1">
+                                                @foreach($seguimiento->acciones_tomadas as $accion)
+                                                    <li>{{ $accion }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+                                    @if($seguimiento->observacion)
+                                        <div class="col-span-2">
+                                            <span class="font-semibold">Observación:</span> {{ $seguimiento->observacion }}
+                                        </div>
+                                    @endif
+                                @else
+                                    <!-- Detalles de Úlcera -->
+                                    <div class="col-span-2">
+                                        <span class="font-semibold">Estadio:</span> {{ $seguimiento->estado_ulcera }}
+                                    </div>
+                                    <div class="col-span-2">
+                                        <span class="font-semibold">Ubicación:</span> {{ $seguimiento->ubicacion_ulcera }}
+                                    </div>
+                                    <div class="col-span-2">
+                                        <span class="font-semibold">Descripción Clínica:</span> {{ $seguimiento->descripcion_ulcera }}
+                                    </div>
+                                    @if($seguimiento->observaciones_ulcera)
+                                        <div class="col-span-2">
+                                            <span class="font-semibold">Observaciones:</span> {{ $seguimiento->observaciones_ulcera }}
+                                        </div>
+                                    @endif
                                 @endif
                             </div>
                         @else
-                            <p class="text-sm text-gray-600">No se registraron caídas durante este turno.</p>
+                            <p class="text-sm text-gray-600">No se registraron {{ strtolower($tituloEvento) }} durante este turno.</p>
                         @endif
 
                         <!-- Verificación de Cumplimiento -->

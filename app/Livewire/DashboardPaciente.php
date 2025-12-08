@@ -54,7 +54,7 @@ class DashboardPaciente extends Component
 
         $cotejo->update(['llamada_atencion' => true]);
         
-        session()->flash('success', 'Llamada de atención marcada correctamente.');
+        session()->flash('success', 'Recomendación marcada correctamente.');
         
         // Recargar datos
         $this->mount($this->admision->id);
@@ -72,7 +72,7 @@ class DashboardPaciente extends Component
 
         $cotejo->update(['llamada_atencion' => false]);
         
-        session()->flash('success', 'Llamada de atención removida correctamente.');
+        session()->flash('success', 'Recomendación removida correctamente.');
         
         // Recargar datos
         $this->mount($this->admision->id);

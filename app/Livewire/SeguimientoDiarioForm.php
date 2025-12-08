@@ -112,7 +112,6 @@ class SeguimientoDiarioForm extends Component
         if ($this->hubo_ulcera) {
             $rules = array_merge($rules, [
                 'estado_ulcera' => 'required|string',
-                'presencia_necrosis' => 'required|string',
                 'descripcion_ulcera' => 'required|string',
                 'ubicacion_ulcera' => 'required|string',
             ]);
@@ -127,7 +126,7 @@ class SeguimientoDiarioForm extends Component
             'hubo_caida' => false,
             'hubo_ulcera' => $this->hubo_ulcera,
             'estado_ulcera' => $this->hubo_ulcera ? $this->estado_ulcera : null,
-            'presencia_necrosis' => $this->hubo_ulcera ? $this->presencia_necrosis : null,
+            // 'presencia_necrosis' => null, // Ya no se usa
             'descripcion_ulcera' => $this->hubo_ulcera ? $this->descripcion_ulcera : null,
             'ubicacion_ulcera' => $this->hubo_ulcera ? $this->ubicacion_ulcera : null,
             'observaciones_ulcera' => $this->hubo_ulcera ? $this->observaciones_ulcera : null,

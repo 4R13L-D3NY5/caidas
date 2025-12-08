@@ -11,6 +11,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Gestión de Pacientes
     Route::view('/pacientes/gestion', 'pacientes.gestion')->name('pacientes.gestion');
     Route::view('/paciente/registro', 'pacientes.registro')->name('paciente.registro');
+    Route::get('/pacientes-lista', App\Livewire\PacientesIndex::class)->name('pacientes.index');
     Route::get('/paciente/{admision}/dashboard', function($admision) {
         return view('pacientes.dashboard', ['admisionId' => $admision]);
     })->name('paciente.dashboard');

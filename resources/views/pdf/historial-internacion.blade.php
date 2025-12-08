@@ -331,48 +331,67 @@
         <div class="section-title">SEGUIMIENTOS DIARIOS</div>
         
         @php
-            $totalCaidas = $seguimientos->where('hubo_caida', true)->count();
+            $totalEventos = $admision->tipo === 'caida'
+                ? $seguimientos->where('hubo_caida', true)->count()
+                : $seguimientos->where('hubo_ulcera', true)->count();
+            
+            $tituloEvento = $admision->tipo === 'caida' ? 'Caídas' : 'Úlceras';
+            $textoRegistrado = $admision->tipo === 'caida' ? 'CAÍDA REGISTRADA' : 'ÚLCERA REGISTRADA';
+            $textoSinEvento = $admision->tipo === 'caida' ? 'SIN CAÍDAS' : 'SIN ÚLCERAS';
         @endphp
         
         <div style="background-color: #dbeafe; padding: 8px; border-radius: 5px; margin-bottom: 10px;">
-            <strong>Total de Caídas Registradas:</strong> 
-            <span style="font-size: 14px; color: {{ $totalCaidas > 0 ? '#ef4444' : '#10b981' }}; font-weight: bold;">
-                {{ $totalCaidas }}
+            <strong>Total de {{ $tituloEvento }} Registradas:</strong> 
+            <span style="font-size: 14px; color: {{ $totalEventos > 0 ? '#ef4444' : '#10b981' }}; font-weight: bold;">
+                {{ $totalEventos }}
             </span>
         </div>
 
         @foreach($seguimientos as $seguimiento)
-        <div class="seguimiento-box {{ $seguimiento->hubo_caida ? 'caida' : 'sin-caida' }}">
+        @php
+            $huboEvento = $admision->tipo === 'caida' ? $seguimiento->hubo_caida : $seguimiento->hubo_ulcera;
+        @endphp
+        <div class="seguimiento-box {{ $huboEvento ? 'caida' : 'sin-caida' }}">
             <div class="seguimiento-header">
                 {{ $seguimiento->fecha->format('d/m/Y') }} - {{ $seguimiento->turno }}
-                <span class="badge {{ $seguimiento->hubo_caida ? 'badge-red' : 'badge-green' }}" style="float: right;">
-                    {{ $seguimiento->hubo_caida ? 'CAÍDA REGISTRADA' : 'SIN CAÍDAS' }}
+                <span class="badge {{ $huboEvento ? 'badge-red' : 'badge-green' }}" style="float: right;">
+                    {{ $huboEvento ? $textoRegistrado : $textoSinEvento }}
                 </span>
             </div>
 
-            @if($seguimiento->hubo_caida)
-            <div class="detail-grid">
-                <div class="detail-item"><span class="detail-label">Hora:</span> {{ $seguimiento->hora_caida }}</div>
-                <div class="detail-item"><span class="detail-label">Lugar:</span> {{ $seguimiento->lugar }}</div>
-                <div class="detail-item"><span class="detail-label">Tipo de Caída:</span> {{ $seguimiento->tipo_caida }}</div>
-                <div class="detail-item"><span class="detail-label">Hubo Lesión:</span> {{ $seguimiento->hubo_lesion ? 'Sí' : 'No' }}</div>
-                @if($seguimiento->hubo_lesion && $seguimiento->descripcion_lesion)
-                <div class="detail-item"><span class="detail-label">Descripción de Lesión:</span> {{ $seguimiento->descripcion_lesion }}</div>
-                @endif
-                @if($seguimiento->acciones_tomadas && count($seguimiento->acciones_tomadas) > 0)
-                <div class="detail-item">
-                    <span class="detail-label">Acciones Tomadas:</span>
-                    <ul style="margin: 2px 0; padding-left: 15px;">
-                        @foreach($seguimiento->acciones_tomadas as $accion)
-                        <li>{{ $accion }}</li>
-                        @endforeach
-                    </ul>
+            @if($huboEvento)
+                <div class="detail-grid">
+                    @if($admision->tipo === 'caida')
+                        <div class="detail-item"><span class="detail-label">Hora:</span> {{ $seguimiento->hora_caida }}</div>
+                        <div class="detail-item"><span class="detail-label">Lugar:</span> {{ $seguimiento->lugar }}</div>
+                        <div class="detail-item"><span class="detail-label">Tipo de Caída:</span> {{ $seguimiento->tipo_caida }}</div>
+                        <div class="detail-item"><span class="detail-label">Hubo Lesión:</span> {{ $seguimiento->hubo_lesion ? 'Sí' : 'No' }}</div>
+                        @if($seguimiento->hubo_lesion && $seguimiento->descripcion_lesion)
+                            <div class="detail-item"><span class="detail-label">Descripción de Lesión:</span> {{ $seguimiento->descripcion_lesion }}</div>
+                        @endif
+                        @if($seguimiento->acciones_tomadas && count($seguimiento->acciones_tomadas) > 0)
+                            <div class="detail-item">
+                                <span class="detail-label">Acciones Tomadas:</span>
+                                <ul style="margin: 2px 0; padding-left: 15px;">
+                                    @foreach($seguimiento->acciones_tomadas as $accion)
+                                    <li>{{ $accion }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        @if($seguimiento->observacion)
+                            <div class="detail-item"><span class="detail-label">Observación:</span> {{ $seguimiento->observacion }}</div>
+                        @endif
+                    @else
+                        <!-- Detalles de Úlcera -->
+                        <div class="detail-item"><span class="detail-label">Estadio:</span> {{ $seguimiento->estado_ulcera }}</div>
+                        <div class="detail-item"><span class="detail-label">Ubicación:</span> {{ $seguimiento->ubicacion_ulcera }}</div>
+                        <div class="detail-item"><span class="detail-label">Descripción Clínica:</span> {{ $seguimiento->descripcion_ulcera }}</div>
+                        @if($seguimiento->observaciones_ulcera)
+                            <div class="detail-item"><span class="detail-label">Observaciones:</span> {{ $seguimiento->observaciones_ulcera }}</div>
+                        @endif
+                    @endif
                 </div>
-                @endif
-                @if($seguimiento->observacion)
-                <div class="detail-item"><span class="detail-label">Observación:</span> {{ $seguimiento->observacion }}</div>
-                @endif
-            </div>
             @endif
 
             @php

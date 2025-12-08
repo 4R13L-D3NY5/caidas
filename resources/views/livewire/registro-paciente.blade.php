@@ -54,7 +54,7 @@
                             </svg>
                             <div>
                                 <p class="font-semibold text-green-800">Paciente Encontrado</p>
-                                <p class="text-sm text-green-700">Los datos del paciente han sido cargados. Puede modificarlos si es necesario.</p>
+                                <p class="text-sm text-green-700">Los datos del paciente han sido cargados.</p>
                             </div>
                         </div>
                     </div>
@@ -81,8 +81,11 @@
                                 Nombre Completo <span class="text-red-500">*</span>
                             </label>
                             <input type="text" 
-                                wire:model="nombre" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                wire:model="nombre"
+                                wire:key="nombre-{{ $pacienteEncontrado ? $pacienteEncontrado->id : 'new' }}"
+                                value="{{ $this->nombre }}"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $pacienteEncontrado ? 'bg-gray-100' : '' }}"
+                                {{ $pacienteEncontrado ? 'readonly' : '' }}>
                             @error('nombre') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
 
@@ -92,7 +95,7 @@
                             </label>
                             <input type="text" 
                                 wire:model="matricula" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md {{ $pacienteEncontrado ? 'bg-gray-100' : '' }}"
                                 readonly>
                             @error('matricula') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
@@ -103,8 +106,11 @@
                             </label>
                             <input type="date" 
                                 wire:model="fecha_nacimiento" 
+                                wire:key="fecha-{{ $pacienteEncontrado ? $pacienteEncontrado->id : 'new' }}"
+                                value="{{ $this->fecha_nacimiento }}"
                                 max="{{ now()->format('Y-m-d') }}"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $pacienteEncontrado ? 'bg-gray-100' : '' }}"
+                                {{ $pacienteEncontrado ? 'readonly' : '' }}>
                             @error('fecha_nacimiento') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>

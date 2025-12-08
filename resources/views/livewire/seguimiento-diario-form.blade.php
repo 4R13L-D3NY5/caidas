@@ -150,39 +150,16 @@
 
                     @if($hubo_ulcera === '1' || $hubo_ulcera === 1 || $hubo_ulcera === true)
                         <div class="space-y-4 pl-6 border-l-4 border-orange-500">
-                            <!-- Pregunta 1: Estadio -->
+                            <!-- Pregunta Única: Estadio / Descripción Clínica -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Estadio - Descripción Clínica (terminología enfermería) *</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Estadio / Descripción Clínica *</label>
                                 <select wire:model="estado_ulcera" class="w-full px-4 py-2 border border-gray-300 rounded-md" required>
-                                    <option value="">Seleccione un estadio</option>
-                                    <option value="Estado I">Estado I - Eritema en piel íntegra</option>
-                                    <option value="Estado II">Estado II - Pérdida parcial del espesor cutáneo (epidermis/dermis). Se presenta como abrasión, flictena o úlcera superficial</option>
-                                    <option value="Estado III">Estado III - Pérdida total del espesor cutáneo con afectación de tejido subcutáneo. Puede haber cavidad, socavamiento y tejido de granulación</option>
-                                    <option value="Estado IV">Estado IV - Pérdida total del espesor con exposición de músculo, hubo o estructuras de soporte</option>
+                                    <option value="">Seleccione una opción</option>
+                                    @foreach($estadosUlcera as $valor => $descripcion)
+                                        <option value="{{ $valor }}">{{ $valor }} - {{ $descripcion }}</option>
+                                    @endforeach
                                 </select>
                                 @error('estado_ulcera') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
-
-                            <!-- Pregunta 2: Frecuente presencia de necrosis -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-3">Frecuente presencia de necrosis *</label>
-                                <div class="space-y-2">
-                                    <label class="flex items-start cursor-pointer p-3 border border-gray-300 rounded-md hover:bg-gray-50">
-                                        <input type="radio" wire:model="presencia_necrosis" value="No clasificable" class="mt-1 mr-3">
-                                        <div>
-                                            <div class="font-medium text-sm text-gray-900">No clasificable</div>
-                                            <div class="text-xs text-gray-600">Profundidad no determinable por presencia de esfacelos o escara que cubren la base de la lesión</div>
-                                        </div>
-                                    </label>
-                                    <label class="flex items-start cursor-pointer p-3 border border-gray-300 rounded-md hover:bg-gray-50">
-                                        <input type="radio" wire:model="presencia_necrosis" value="Lesión de tejido profundo" class="mt-1 mr-3">
-                                        <div>
-                                            <div class="font-medium text-sm text-gray-900">Lesión de tejido profundo</div>
-                                            <div class="text-xs text-gray-600">Piel íntegra o con flictena hemática, color morado/borgoña</div>
-                                        </div>
-                                    </label>
-                                </div>
-                                @error('presencia_necrosis') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <div>

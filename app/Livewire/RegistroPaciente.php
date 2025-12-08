@@ -12,7 +12,7 @@ class RegistroPaciente extends Component
     public $matricula = '';
     public $pacienteEncontrado = null;
     public $mostrarFormulario = false;
-    
+
     // Datos del paciente
     public $nombre = '';
     public $fecha_nacimiento = '';
@@ -22,11 +22,6 @@ class RegistroPaciente extends Component
     public $turno = '';
     public $fecha_valoracion = '';
     public $diagnostico_inicial = '';
-
-    public function mount()
-    {
-        $this->fecha_valoracion = now()->format('Y-m-d');
-    }
 
     public function buscarPaciente()
     {
@@ -42,10 +37,14 @@ class RegistroPaciente extends Component
             // Paciente encontrado
             $this->pacienteEncontrado = $paciente;
             $this->nombre = $paciente->nombre;
-            $this->fecha_nacimiento = $paciente->fecha_nacimiento->format('Y-m-d');
+            // Manejo seguro de fecha
+            $this->fecha_nacimiento = $paciente->fecha_nacimiento instanceof \Carbon\Carbon 
+                ? $paciente->fecha_nacimiento->format('Y-m-d') 
+                : $paciente->fecha_nacimiento;
+
             $this->mostrarFormulario = true;
         } else {
-            // Paciente no encontrado, mostrar formulario completo
+            // Paciente no encontrado
             $this->pacienteEncontrado = null;
             $this->nombre = '';
             $this->fecha_nacimiento = '';
@@ -65,7 +64,6 @@ class RegistroPaciente extends Component
             'diagnostico_inicial' => 'required|string',
         ];
 
-        // Si es un paciente nuevo, validar que la matrícula sea única
         if (!$this->pacienteEncontrado) {
             $rules['matricula'] .= '|unique:pacientes,matricula';
         }
@@ -83,11 +81,11 @@ class RegistroPaciente extends Component
             'diagnostico_inicial.required' => 'El diagnóstico inicial es obligatorio',
         ]);
 
-        // Crear o actualizar paciente
+        // Crear o usar paciente existente
         if ($this->pacienteEncontrado) {
             $paciente = $this->pacienteEncontrado;
             
-            // Verificar si ya tiene una admisión activa del mismo tipo
+            // Verificar admisión activa
             $admisionActiva = $paciente->admisiones()
                 ->where('tipo', $this->tipo)
                 ->where('estado', 'activo')
@@ -98,11 +96,7 @@ class RegistroPaciente extends Component
                 return;
             }
             
-            // Actualizar datos si han cambiado
-            $paciente->update([
-                'nombre' => $this->nombre,
-                'fecha_nacimiento' => $this->fecha_nacimiento,
-            ]);
+            // NO actualizamos datos del paciente aquí, según requerimiento
         } else {
             $paciente = Paciente::create([
                 'nombre' => $this->nombre,
@@ -120,15 +114,14 @@ class RegistroPaciente extends Component
             'diagnostico_inicial' => $this->diagnostico_inicial,
         ]);
 
-        session()->flash('success', $this->pacienteEncontrado ? 'Nueva admisión registrada exitosamente' : 'Paciente registrado exitosamente');
+        session()->flash('success', $this->pacienteEncontrado ? 'Nueva valoración registrada exitosamente' : 'Paciente y valoración registrados exitosamente');
         
-        // Redirigir a la valoración inicial
         return redirect()->route('valoracion.inicial', ['admision' => $admision->id]);
     }
 
     public function cancelar()
     {
-        $this->reset();
+        $this->reset(['matricula', 'pacienteEncontrado', 'mostrarFormulario', 'nombre', 'fecha_nacimiento', 'tipo', 'turno', 'diagnostico_inicial']);
         $this->fecha_valoracion = now()->format('Y-m-d');
     }
 

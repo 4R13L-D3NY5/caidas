@@ -75,7 +75,7 @@
                 </p>
             </div>
 
-            <!-- Llamada de Atención (solo si cumplimiento < 100%) -->
+            <!-- Recomendación (solo si cumplimiento < 100%) -->
             @if($porcentaje < 100 && $porcentaje > 0)
                 <div class="bg-yellow-50 border border-yellow-300 rounded-lg p-4 mb-6">
                     <div class="flex items-start gap-3">
@@ -84,10 +84,10 @@
                             id="llamada_atencion"
                             class="mt-1">
                         <label for="llamada_atencion" class="flex-1 cursor-pointer">
-                            <span class="font-semibold text-gray-800">Notificar llamada de atención</span>
+                            <span class="font-semibold text-gray-800">Notificar recomendación</span>
                             <p class="text-sm text-gray-600 mt-1">
                                 Marque esta opción si las acciones fueron verificadas pero el cumplimiento no alcanzó el 100%. 
-                                Esto generará una notificación para el personal responsable.
+                                Esto generará una recomendación para el personal responsable.
                             </p>
                         </label>
                     </div>
