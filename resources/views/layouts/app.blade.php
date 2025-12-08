@@ -28,7 +28,7 @@
                 <!-- Logo/Header -->
                 <div class="p-4 bg-gray-900">
                     <h1 class="text-xl font-bold text-center">Supervisión de Enfermería</h1>
-                    <p class="text-xs text-gray-400 text-center mt-1">Valoración de Pacientes</p>
+                    <p class="text-xs text-gray-400 text-center mt-1">Valoración</p>
                 </div>
 
                 <!-- User Info -->
