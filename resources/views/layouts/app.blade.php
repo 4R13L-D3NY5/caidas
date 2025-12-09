@@ -19,12 +19,44 @@
                 background-color: #3b82f6;
                 color: white;
             }
+            
+            /* Responsive Sidebar Logic */
+            @media (max-width: 1024px) {
+                #sidebar {
+                    position: fixed !important;
+                    top: 0;
+                    left: 0;
+                    bottom: 0;
+                    z-index: 50;
+                    width: 16rem;
+                    transform: translateX(-100%);
+                    transition: transform 0.3s ease;
+                }
+                #sidebar.open {
+                    transform: translateX(0);
+                }
+                #sidebar-toggle {
+                    display: block;
+                }
+            }
+            @media (min-width: 1025px) {
+                #sidebar {
+                    position: static;
+                    transform: none;
+                    flex-shrink: 0;
+                    width: 16rem; /* w-64 equivalente */
+                    display: block; /* Asegurar que se muestre en desktop */
+                }
+                #sidebar-toggle {
+                    display: none;
+                }
+            }
         </style>
     </head>
     <body class="font-sans antialiased bg-gray-100">
         <div class="flex h-screen overflow-hidden">
             <!-- Sidebar -->
-            <aside id="sidebar" class="w-64 bg-gray-800 text-white flex-shrink-0 overflow-y-auto transition-all duration-300">
+            <aside id="sidebar" class="bg-gray-800 text-white overflow-y-auto">
                 <!-- Logo/Header -->
                 <div class="p-4 bg-gray-900">
                     <h1 class="text-xl font-bold text-center">Supervisión de Enfermería</h1>
@@ -142,19 +174,20 @@
                     </form>
                 </nav>
 
-                <!-- Toggle Button (Mobile) -->
-                <button id="sidebar-toggle" class="lg:hidden fixed bottom-4 right-4 bg-blue-600 text-white p-3 rounded-full shadow-lg z-50">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
             </aside>
 
             <!-- Main Content -->
             <div class="flex-1 flex flex-col overflow-hidden">
                 <!-- Top Bar -->
-                <header class="bg-white shadow-sm z-10">
-                    <div class="px-6 py-4">
+                <header class="sticky top-0 bg-white shadow-sm z-10 flex items-center justify-between px-6 py-4">
+                    <div class="flex items-center gap-4">
+                        <!-- Mobile Hamburger Button -->
+                        <button id="sidebar-toggle" class="text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700">
+                            <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+
                         @if (isset($header))
                             {{ $header }}
                         @else
@@ -180,15 +213,15 @@
                 
                 if (toggleBtn) {
                     toggleBtn.addEventListener('click', function() {
-                        sidebar.classList.toggle('-translate-x-full');
+                        sidebar.classList.toggle('open');
                     });
                 }
 
                 // Close sidebar when clicking outside on mobile
                 document.addEventListener('click', function(event) {
-                    if (window.innerWidth < 1024) {
-                        if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
-                            sidebar.classList.add('-translate-x-full');
+                    if (window.innerWidth <= 1024) {
+                        if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target) && sidebar.classList.contains('open')) {
+                            sidebar.classList.remove('open');
                         }
                     }
                 });

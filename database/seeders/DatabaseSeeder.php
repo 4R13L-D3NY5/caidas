@@ -23,19 +23,19 @@ class DatabaseSeeder extends Seeder
 
         // Crear usuario de prueba (supervisora)
         User::factory()->create([
-            'name' => 'Supervisora',
-            'email' => 'supervisora@caidas.com',
+            'name' => 'Aracely Sevilla',
+            'email' => 'aracely@supervision.com',
             'rol' => 'supervisora',
         ]);
 
         // Crear usuario de prueba (enfermera)
-        User::factory()->create([
-            'name' => 'Enfermera',
-            'email' => 'enfermera@caidas.com',
-            'rol' => 'enfermera',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Enfermera',
+        //     'email' => 'enfermera@caidas.com',
+        //     'rol' => 'enfermera',
+        // ]);
 
         // Crear pacientes de prueba
-        $this->call(PacientesPruebaSeeder::class);
+        // $this->call(PacientesPruebaSeeder::class);
     }
 }
